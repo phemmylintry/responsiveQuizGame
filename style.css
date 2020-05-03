@@ -1,0 +1,438 @@
+html,
+body {
+    background: url(light_wool.png) #fff;
+    color: #000;
+    height: 100%;
+    font-family: Arial, Helvetica, 'Helvetica Neue', Verdana, sans-serif;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin: 0;
+}
+
+a {
+    color: #2daebf;
+    text-decoration: none;
+}
+
+code {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background: #ff9da4;
+    padding: 0 6px 4px 6px;
+}
+
+pre {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 1px 5px rgba(255, 255, 255, 1);
+    -webkit-box-shadow: 0 1px 5px rgba(255, 255, 255, 1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+}
+
+.prettyprint {
+    overflow-x: auto;
+}
+
+pre span {
+    font-size: 16px;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.main-header {
+    background: #000;
+    padding: 10px;
+    -webkit-box-shadow: 0 4px 2px -2px #000;
+    -moz-box-shadow: 0 4px 2px -2px #000;
+    box-shadow: 0 4px 2px -2px #000;
+    position: relative;
+    z-index: 2;
+}
+
+.share,
+.share_end {
+    z-index: 10;
+}
+
+.question-modal {
+    display: none;
+    background: #000;
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    color: #fff;
+    text-align: center;
+}
+
+.p-t-40 {
+    margin-top: 40px;
+}
+
+.quiz-wrap {
+    margin: 0 auto;
+    padding-bottom: 1em;
+    width: 80%;
+}
+
+.quiz-wrap .no-code-sample {
+    padding-top: 1em;
+}
+
+.quiz-wrap h2 {
+    font-size: 80px;
+}
+
+.quiz-wrap ul {
+    list-style: none;
+    padding: 0;
+}
+
+.quiz-wrap .answers {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.quiz-wrap .answers li {
+    display: inline-block;
+    /* yes, hack is bad...but....no time ! */
+    *display: inline;
+    zoom: 1;
+    margin: 0 10px 10px 0;
+}
+
+.quiz-wrap .answers-many li,
+.quiz-wrap .answers-many .btn {
+    display: block;
+}
+
+.quiz-wrap p,
+.quiz-wrap .question-count {
+    font-size: 20px;
+}
+
+.quiz-wrap .question-count {
+    padding-top: 1em;
+}
+
+.quiz-wrap .skill-intro,
+.quiz-wrap .intro,
+.quiz-wrap .question-count {
+    text-align: center;
+}
+
+.quiz-wrap .intro h1,
+.quiz-wrap .finished h1 {
+    margin-bottom: 0.2em;
+}
+
+.quiz-wrap .intro .start-skill {
+    margin: 1em 0;
+}
+
+.quiz-wrap article {
+    display: none;
+    left: 9999px;
+    position: relative;
+    -webkit-transition-property: left;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-property: left;
+    -moz-transition-duration: 0.5s;
+    transition-property: left;
+    transition-duration: 0.5s;
+    width: 100%;
+}
+
+.quiz-wrap .current-question {
+    display: block;
+    left: 0;
+}
+
+.current-question p {
+    text-align: center;
+}
+
+.quiz-wrap .question {
+    font-size: 24px;
+    text-align: center;
+}
+
+.quiz-wrap .completed {
+    left: -9999px;
+}
+
+.quiz-wrap .btn {
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+    background-color: #2daebf;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 8px 14px 9px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.quiz-wrap .incorrect-answer .btn {
+    cursor: default;
+}
+
+.quiz-wrap .incorrect-answer .btn:hover {
+    opacity: 1;
+}
+
+.quiz-wrap .btn:hover {
+    opacity: 0.9;
+}
+
+.quiz-wrap .answers .btn {
+    font-size: 24px;
+}
+
+.quiz-wrap .skip {
+    background: #d3414a;
+}
+
+.quiz-wrap .correct-answer,
+.quiz-wrap .incorrect-wrap {
+    text-align: center;
+}
+
+.quiz-wrap .incorrect-answer {
+    opacity: 0.5;
+}
+
+.quiz-wrap .incorrect-wrap {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    z-index: 1;
+}
+
+.quiz-wrap .incorrect-answer .answers .btn {
+    opacity: 0.3;
+}
+
+.quiz-wrap .next-trigger {
+    opacity: 0.95;
+    color: #fff;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+    display: none;
+    cursor: pointer;
+    position: fixed;
+    top: 50%;
+    right: 0;
+    background: #2daebf;
+    width: 20%;
+    margin-top: -44px;
+    padding: 1em 0.5em;
+}
+
+.quiz-wrap .next-trigger:hover {
+    opacity: 1;
+}
+
+.quiz-wrap .next-trigger h1 {
+    text-align: center;
+}
+
+.note-title {
+    color: #ff9da4;
+}
+
+
+/* yes, hack is bad...but....no time ! */
+
+.incorrect-answer .btn {
+    background: red;
+    color: white;
+}
+
+.quiz-wrap .incorrect-answer .answers [data-answer="yes"],
+.incorrect-answer .correct-btn {
+    /* yes, hack is bad...but....no time ! */
+    background: green\9;
+    opacity: 1;
+}
+
+.quiz-wrap .score-wrap {
+    background: #000;
+    border-radius: 5px;
+    color: #fff;
+    right: 10px;
+    padding: 10px;
+    position: fixed;
+    top: 5em;
+    z-index: 9999;
+}
+
+.quiz-wrap .score-wrap p {
+    margin: 0;
+}
+
+@-webkit-keyframes pulse {
+    from {
+        -webkit-transform: scale(1.0);
+        opacity: 0.75;
+    }
+    50% {
+        -webkit-transform: scale(1.2);
+        opacity: 1.0;
+    }
+    to {
+        -webkit-transform: scale(1.0);
+        opacity: 0.75;
+    }
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(1.0);
+        opacity: 0.75;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1.0;
+    }
+    to {
+        transform: scale(1.0);
+        opacity: 0.75;
+    }
+}
+
+.pulse {
+    opacity: 0.75;
+}
+
+.pulse {
+    -webkit-animation-name: pulse;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-iteration-count: 5;
+    animation-name: pulse;
+    animation-duration: 0.5s;
+    animation-iteration-count: 5;
+}
+
+.quiz-wrap .finished {
+    display: none;
+    text-align: center;
+}
+
+.quiz-wrap .average {
+    font-style: italic;
+    color: #ff9da4;
+}
+
+.quiz-wrap .ebook {
+    background: #fff;
+    border-radius: 5px;
+    color: #000;
+    margin-top: 2em;
+    padding: 1em 0;
+}
+
+.quiz-wrap .ebook a {
+    color: #2daebf;
+}
+
+@media only screen and (max-width: 500px) {
+    .quiz-wrap .score-wrap {
+        border-radius: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: 0;
+    }
+    .quiz-wrap .question-count {
+        padding-top: 2.5em;
+    }
+}
+
+.twitter-follow-button {
+    float: right;
+}
+
+.share {
+    top: 4px;
+    position: relative;
+}
+
+.share .button {
+    float: left;
+    margin-right: 10px;
+}
+
+.share_end {
+    margin: 0 auto;
+    position: static;
+    text-align: left;
+    width: 10%;
+}
+
+.share_end .button {
+    margin-right: 10px;
+}
+
+.warn {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    -webkit-transform: rotate(-10deg);
+    transform: rotate(-10deg);
+}
+
+@media only screen and (max-width: 900px) {
+    .warn {
+        display: none;
+    }
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+
+/* start commented backslash hack \*/
+
+* html .clearfix {
+    height: 1%;
+}
+
+.clearfix {
+    display: block;
+}
+
+
+/* close commented backslash hack */

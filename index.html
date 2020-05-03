@@ -1,0 +1,346 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="pretty.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="quiz-wrap">
+        <aside class="score-wrap">
+            <p>Score: <span>0</span></p>
+        </aside>
+
+        <section class="skill-area" data-skill="JAVASCRIPT">
+            <article class="intro skill-intro current-question">
+                <h2>Responsive Quiz Game</h2>
+                <a href="#" class="btn start-skill">Start</a>
+            </article>
+
+            <article>
+                <pre class="prettyprint lang-js">Inside which HTML element do we put the JavaScript?</pre>
+                <ul class="answers">
+                    <li><span class="btn">&lt;scripting/></span></li>
+                    <li><span class="btn">&lt;js/></span></li>
+                    <li><span class="btn correct-btn" data-answer="yes">&lt;script/></span></li>
+                </ul>
+            </article>
+
+            <article>
+                <pre class="prettyprint lang-js">What is the correct JavaScript syntax to change the content of the HTML element below? <br> &lt;p id="demo">This is a demonstration.&lt;/p></pre>
+
+                <ul class="answers">
+                    <li><span class="btn correct-btn" data-answer="yes">  document.getElementById("demo").innerHTML = "Hello World!";</span></li>
+                    <li><span class="btn"> document.getElement("p").innerHTML = "Hello World!";</span></li>
+                    <li><span class="btn"> #demo.innerHTML = "Hello World!";</span></li>
+                </ul>
+            </article>
+
+            <article>
+                <pre class="prettyprint lang-js"> Which of the following is NOT a valid CSS length unit? </pre>
+                <ul class="answers">
+                    <li><span class="btn">cm</span></li>
+                    <li><span class="btn correct-btn" data-answer="yes">dm</span></li>
+                    <li><span class="btn">mm</span></li>
+                </ul>
+            </article>
+
+            <article>
+                <pre class="prettyprint lang-js"> Which of the following CSS properties DOES NOT influence the box model? </pre>
+                <ul class="answers">
+                    <li><span class="btn">content</span></li>
+                    <li><span class="btn">border</span></li>
+                    <li><span class="btn correct-btn" data-answer="yes">outline</span></li>
+                </ul>
+            </article>
+
+            <article>
+                <pre class="prettyprint lang-js"> There are 16 basic color keywords in CSS. Which of the following are NOT basic color keywords?</pre>
+                <ul class="answers">
+                    <li><span class="btn correct-btn" data-answer="yes">cyan</span></li>
+                    <li><span class="btn">olive</span></li>
+                    <li><span class="btn">maroon</span></li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="finished">
+            <h2>You Scored: <span>x%</span></h2>
+        </section>
+
+        <div class="next-trigger">
+            <h1>Continue &raquo;</h1>
+        </div>
+    </div>
+
+    <script src="jquery.min.js"></script>
+    <script src="prettify.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            function getHashValue(key) {
+                var result = location.hash.match(new RegExp(key + '=([^&]*)'));
+                return result ? result[1] : '';
+            }
+
+            var score = 0,
+                score_wrap = $('.score-wrap'),
+                score_el = score_wrap.find('span'),
+                body = $('html, body'),
+                skills = $('.skill-area'),
+                qs_wrong = [],
+                avg = 0,
+                last_result = '',
+                _html = {
+                    'correct-answer': $('<h2>Correct</h2>'),
+                    'incorrect-answer': $('<div class="incorrect-wrap"><h2>Incorrect</h2></div>'),
+                    'skip': $('<li><span class="btn skip">Next</span></li>')
+                };
+
+            prettyPrint();
+
+            $('.answers').append(_html['skip']);
+
+            $.ajax({
+                dataType: 'json',
+                url: 'scores.php?info=1'
+            }).done(function(data) {
+                $('.average span').html((Math.round(data.avg * 100) / 100) + '%');
+                $('.people').html(data.people);
+                avg = data.avg;
+            });
+
+            skills.each(function() {
+
+                var area_questions = $(this).find('article:not(.skill-intro)');
+
+                area_questions.each(function(i) {
+
+                    $(this).attr('data-question-no', (i + 1));
+                    $(this).prepend('<div class="question-count">Question ' + (i + 1) + '/' + area_questions.length + ' </div>');
+
+                });
+
+            });
+
+            $('.quiz-wrap article').on('transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd', function(e) {
+                e.stopPropagation();
+                open_next_question($(e.currentTarget));
+            });
+
+            $('.btn').not('.question-modal .btn').on('click', function(e) {
+
+                e.preventDefault();
+
+                var that = $(this),
+                    container = that.parents('article'),
+                    next_time = 1000,
+                    auto_move = true;
+
+                if (container.hasClass('incorrect-answer')) {
+                    return;
+                }
+
+                if (that.hasClass('skip') === false && that.hasClass('start-skill') === false) {
+
+                    if (that.data('answer') === 'yes') {
+                        last_result = 'correct-answer';
+                        score++;
+                        score_el.html(score);
+                        score_wrap.addClass('pulse');
+                        setTimeout(function() {
+                            score_wrap.removeClass('pulse');
+                        }, next_time);
+                    } else if (that.hasClass('skip') === false) {
+
+                        auto_move = false;
+                        last_result = 'incorrect-answer';
+                        container.addClass(last_result);
+
+                        qs_wrong.push({
+                            'question-no': container.data('question-no'),
+                            'actual': that.text()
+                        });
+
+                        var wrong = $(_html[last_result]).appendTo('.quiz-wrap');
+
+                        setTimeout(function() {
+                            $('.next-trigger').show();
+                            wrong.remove();
+                            container.find('.answers').prepend('<h1 class="note-title">The correct answer was:</h1>');
+                            container.find('[data-answer="yes"]').addClass('pulse');
+                        }, next_time);
+
+                    }
+
+                    body.scrollTop(0);
+
+                    if (auto_move === true) {
+
+                        // show the result to the user
+                        container.addClass(last_result).html(_html[last_result]);
+
+                        setTimeout(function() {
+                            trigger_next_question(container);
+                        }, next_time);
+
+                    }
+
+                } else {
+
+                    if (that.hasClass('skip')) {
+                        qs_wrong.push({
+                            'question-no': container.data('question-no'),
+                            'actual': 'skip'
+                        });
+                    }
+
+                    last_result = '';
+                    trigger_next_question(container);
+                }
+
+            });
+
+            $('.next-trigger').on('click', function(e) {
+                $(this).hide();
+                trigger_next_question($('.current-question'));
+            });
+
+            function open_question_no(num) {
+
+                $('.current-question').removeClass('current-question');
+                $('[data-question-no="' + num + '"]').addClass('current-question');
+
+            }
+
+            function open_next_question(that) {
+
+                // open the next question
+                if (that.hasClass('completed')) {
+                    that.removeClass('current-question').hide().next().addClass('current-question');
+                }
+
+            }
+
+            function trigger_next_question(container) {
+
+                var next = container.addClass('completed').next();
+
+                // opens new section
+                if (next.length === 0) {
+                    container.hide('slow');
+                    next = container.parent().next().find('article').first().addClass('current-question');
+                }
+
+                // open next question
+                if (next.length > 0) {
+
+                    var next_no = next.data('question-no');
+
+                    window.location.hash = next_no ? 'q=' + next_no : '';
+
+                    if (supportsTransitions() === true) {
+                        next.show();
+                    } else {
+                        open_next_question(container);
+                    }
+                } else {
+                    window.location.hash = '';
+                    finish_quiz();
+                }
+
+            }
+
+            function finish_quiz() {
+
+                var total_questions = $('article:not(.skill-intro)').length,
+                    final_score = Math.ceil((score / total_questions * 100));
+
+                $('.finished h2 span').html(final_score + '%');
+
+                $('.share_end').sharrre({
+                    share: {
+                        facebook: true,
+                        twitter: true,
+                        digg: false,
+                        delicious: false,
+                        stumbleupon: false,
+                        linkedin: false,
+                        googlePlus: false
+                    },
+                    enableHover: false,
+                    enableCounter: false,
+                    enableTracking: true,
+                    url: 'http://davidshariff.com/js-quiz/'
+                });
+
+                $('.finished').show('slow');
+
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        'score': final_score,
+                        'wrong': qs_wrong
+                    },
+                    url: 'scores.php'
+                });
+
+            }
+
+            function supportsTransitions() {
+                var b = document.body || document.documentElement;
+                var s = b.style;
+                var p = 'transition';
+                if (typeof s[p] == 'string') {
+                    return true;
+                }
+
+                // Tests for vendor specific prop
+                v = ['Moz', 'Webkit', 'Khtml', 'O', 'ms'],
+                    p = p.charAt(0).toUpperCase() + p.substr(1);
+                for (var i = 0; i < v.length; i++) {
+                    if (typeof s[v[i] + p] == 'string') {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            var start_q = getHashValue('q');
+
+            if (start_q) {
+                $('.question-modal').show();
+                $('.question-start-from').html(start_q);
+            }
+
+            $('.question-modal .btn').on('click', function() {
+
+                if (!$(this).hasClass('btn-begin')) {
+                    open_question_no(start_q);
+                }
+
+                $('.question-modal').hide();
+
+            });
+
+        });
+    </script>
+    <script>
+        ! function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+                p = /^http:/.test(d.location) ? 'http' : 'https';
+            if (!d.getElementById(id)) {
+                js = d.createElement(s);
+                js.id = id;
+                js.src = p + '://platform.twitter.com/widgets.js';
+                fjs.parentNode.insertBefore(js, fjs);
+            }
+        }(document, 'script', 'twitter-wjs');
+    </script>
+    <script src="share.js"></script>
+</body>
+
+</html>
