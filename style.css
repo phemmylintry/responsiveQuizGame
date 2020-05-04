@@ -56,11 +56,6 @@ p {
     z-index: 2;
 }
 
-.share,
-.share_end {
-    z-index: 10;
-}
-
 .question-modal {
     display: none;
     background: #000;
@@ -371,31 +366,6 @@ p {
     }
 }
 
-.twitter-follow-button {
-    float: right;
-}
-
-.share {
-    top: 4px;
-    position: relative;
-}
-
-.share .button {
-    float: left;
-    margin-right: 10px;
-}
-
-.share_end {
-    margin: 0 auto;
-    position: static;
-    text-align: left;
-    width: 10%;
-}
-
-.share_end .button {
-    margin-right: 10px;
-}
-
 .warn {
     position: absolute;
     left: 10px;
@@ -409,30 +379,3 @@ p {
         display: none;
     }
 }
-
-.clearfix:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
-}
-
-.clearfix {
-    display: inline-block;
-}
-
-
-/* start commented backslash hack \*/
-
-* html .clearfix {
-    height: 1%;
-}
-
-.clearfix {
-    display: block;
-}
-
-
-/* close commented backslash hack */
