@@ -274,7 +274,7 @@ p {
 .quiz-wrap .incorrect-answer .answers [data-answer="yes"],
 .incorrect-answer .correct-btn {
     /* yes, hack is bad...but....no time ! */
-    background: green\9;
+    background: green;
     opacity: 1;
 }
 

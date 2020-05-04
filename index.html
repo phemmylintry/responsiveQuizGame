@@ -261,32 +261,7 @@
 
                 $('.finished h2 span').html(final_score + '%');
 
-                $('.share_end').sharrre({
-                    share: {
-                        facebook: true,
-                        twitter: true,
-                        digg: false,
-                        delicious: false,
-                        stumbleupon: false,
-                        linkedin: false,
-                        googlePlus: false
-                    },
-                    enableHover: false,
-                    enableCounter: false,
-                    enableTracking: true,
-                    url: 'http://davidshariff.com/js-quiz/'
-                });
-
                 $('.finished').show('slow');
-
-                $.ajax({
-                    type: 'POST',
-                    data: {
-                        'score': final_score,
-                        'wrong': qs_wrong
-                    },
-                    url: 'scores.php'
-                });
 
             }
 
@@ -340,7 +315,6 @@
             }
         }(document, 'script', 'twitter-wjs');
     </script>
-    <script src="share.js"></script>
 </body>
 
 </html>
